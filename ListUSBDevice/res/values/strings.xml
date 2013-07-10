@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ListUSBDevice</string>
+    <string name="action_refresh">刷新</string>
+    
+    <string name="k_deviceid">设备ID:</string>
+    <string name="k_devicename">设备名:</string>
+    <string name="k_vendorid">厂商ID:</string>
+    <string name="k_productid">产品ID:</string>
+    
+    <string name="emapty"></string>
+</resources>
