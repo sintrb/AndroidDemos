@@ -3,11 +3,35 @@
 
     <string name="app_name">ListUSBDevice</string>
     <string name="action_refresh">刷新</string>
+    <string name="action_exit">退出</string>
     
     <string name="k_deviceid">设备ID:</string>
     <string name="k_devicename">设备名:</string>
     <string name="k_vendorid">厂商ID:</string>
     <string name="k_productid">产品ID:</string>
     
-    <string name="emapty"></string>
+    <string name="k_deviceclass">设备类:</string>
+    <string name="k_deviceprotocol">设备协议:</string>
+    <string name="k_devicesubclass">设备子类:</string>
+    <string name="k_interfacecount">接口数:</string>
+    
+    <string name="k_interfaceid">接口ID:</string>
+    <string name="k_interfaceclass">接口类:</string>
+    <string name="k_interfaceprotocol">接口协议:</string>
+    <string name="k_interfacesubclass">接口子类:</string>
+    <string name="k_endpointcount">端点数目:</string>
+    
+    
+    <string name="k_endpointnumber">端点编号:</string>
+    <string name="k_endpointaddress">端点地址:</string>
+    <string name="k_endpointattributes">端点属性:</string>
+    <string name="k_endpointdirection">端点方向:</string>
+    <string name="k_endpointinterval">间隔:</string>
+    <string name="k_endpointmaxpacketsize">最大包:</string>
+    <string name="k_endpointtype">类型:</string>
+    
+    
+    <string name="send">发送</string>
+    <string name="reci">接收</string>
+    <string name="emapty">XX</string>
 </resources>
