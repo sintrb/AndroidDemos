@@ -20,7 +20,8 @@ import com.sin.android.sinlibs.activities.BaseActivity;
 import com.sin.android.sinlibs.base.Callable;
 
 public class MainActivity extends BaseActivity {
-
+	public final String VERSION	= "1.0";
+	public final int VERSION_INT = 10;
 	private UsbManager usbManager;
 	private ListView lv_devices;
 	private ArrayList<HashMap<String, Object>> devices = new ArrayList<HashMap<String, Object>>();
@@ -75,7 +76,7 @@ public class MainActivity extends BaseActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	// Ë¢ÐÂÉè±¸ÁÐ±í
+	// Ë¢ï¿½ï¿½ï¿½è±¸ï¿½Ð±ï¿½
 	private void refreshDevices() {
 		asynCall(new Callable() {
 
