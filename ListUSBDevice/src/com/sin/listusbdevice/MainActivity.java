@@ -76,7 +76,7 @@ public class MainActivity extends BaseActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	// ˢ���豸�б�
+	// 刷新设备列表
 	private void refreshDevices() {
 		asynCall(new Callable() {
 
