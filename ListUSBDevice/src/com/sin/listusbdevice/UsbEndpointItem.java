@@ -1,6 +1,5 @@
 package com.sin.listusbdevice;
 
-import android.annotation.SuppressLint;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
 
@@ -18,14 +17,11 @@ public class UsbEndpointItem {
 		this.usbEndpoint = usbEndpoint;
 	}
 
-	@SuppressLint("DefaultLocale")
 	public int send(byte[] data) {
-		// byte [] dt = new byte[]{1,1,1,1,1,1};
 		return usbDeviceConnection.bulkTransfer(usbEndpoint, data, data.length, 1000);
 	}
 
 	private byte[] rbuf = new byte[1024];
-
 	public byte[] recv() {
 		int l = usbDeviceConnection.bulkTransfer(usbEndpoint, rbuf, rbuf.length, 1000);
 		if (l < 0) {

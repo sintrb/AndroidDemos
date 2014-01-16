@@ -1,5 +1,6 @@
 package com.sin.listusbdevice;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -247,7 +248,12 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 		for (int i = 0; i < dt.length; ++i) {
 			sb.append(String.format("%02X ", dt[i]));
 		}
-		
+		sb.append(":");
+		try {
+			sb.append(new String(dt, "utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		return sb.toString();
 	}
 
