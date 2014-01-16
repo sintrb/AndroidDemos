@@ -32,6 +32,6 @@
     
     
     <string name="send">发送</string>
-    <string name="reci">接收</string>
+    <string name="recv">接收</string>
     <string name="emapty">XX</string>
 </resources>

@@ -13,18 +13,37 @@
         android:paddingRight="@dimen/margin_small" >
 
         <Button
+            android:id="@+id/btn_recv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/recv" />
+
+        <Button
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/send" />
     </LinearLayout>
 
+    <EditText
+        android:id="@+id/et_console"
+        android:layout_width="wrap_content"
+        android:hint="@string/emapty"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/llpanel"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
     <ExpandableListView
         android:id="@+id/elv_interfaces"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/llpanel" >
+        android:layout_below="@+id/et_console" >
 
     </ExpandableListView>
 
