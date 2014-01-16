@@ -247,6 +247,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 		for (int i = 0; i < dt.length; ++i) {
 			sb.append(String.format("%02X ", dt[i]));
 		}
+		
 		return sb.toString();
 	}
 
