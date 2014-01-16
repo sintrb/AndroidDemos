@@ -19,21 +19,21 @@ public class UsbEndpointItem {
 	}
 
 	@SuppressLint("DefaultLocale")
-	@Override
-	public String toString() {
-		return String.format("IF:%d  A:%02X AT:%02X D:%02X EN:%02X IV:%02X MPS:%02X T:%02X", intefaceIndex, 
-				usbEndpoint.getAddress(), 
-				usbEndpoint.getAttributes(), 
-				usbEndpoint.getDirection(), 
-				usbEndpoint.getEndpointNumber(), 
-				usbEndpoint.getInterval(), 
-				usbEndpoint.getMaxPacketSize(), 
-				usbEndpoint.getType());
+	public int send(byte[] data) {
+		// byte [] dt = new byte[]{1,1,1,1,1,1};
+		return usbDeviceConnection.bulkTransfer(usbEndpoint, data, data.length, 1000);
 	}
-	
-	
-	public int send(){
-		byte [] dt = new byte[]{1,2,3,4};
-		return usbDeviceConnection.bulkTransfer(usbEndpoint, dt, dt.length, 1000);
+
+	private byte[] rbuf = new byte[1024];
+
+	public byte[] recv() {
+		int l = usbDeviceConnection.bulkTransfer(usbEndpoint, rbuf, rbuf.length, 1000);
+		if (l < 0) {
+			return null;
+		} else {
+			byte[] rt = new byte[l];
+			System.arraycopy(rbuf, 0, rt, 0, l);
+			return rt;
+		}
 	}
 }
