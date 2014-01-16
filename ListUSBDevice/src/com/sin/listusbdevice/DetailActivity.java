@@ -1,7 +1,9 @@
 package com.sin.listusbdevice;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,6 +35,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 	private static final String TAG = "DetailActivity";
 	private static final String ACTION_FOR_PERMISSION = DetailActivity.class.getName() + ".ACTION_FOR_PERMISSION";
 
+	private EditText et_console = null;
 	private ExpandableListView elv_interfaces = null;
 	private BaseExpandableListAdapter expandableListAdapter = null;
 
@@ -83,7 +87,18 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 		readyOpenDevice();
 
 		findViewById(R.id.btn_send).setOnClickListener(this);
+		findViewById(R.id.btn_recv).setOnClickListener(this);
 
+		et_console = (EditText) findViewById(R.id.et_console);
+		et_console.setText(getPreferences(MODE_PRIVATE).getString("et", ""));
+		et_console.setOnLongClickListener(new View.OnLongClickListener() {
+
+			@Override
+			public boolean onLongClick(View arg0) {
+				et_console.setText(getPreferences(MODE_PRIVATE).getString("et", ""));
+				return false;
+			}
+		});
 		//
 		elv_interfaces = (ExpandableListView) findViewById(R.id.elv_interfaces);
 		elv_interfaces.setGroupIndicator(null);
@@ -109,7 +124,6 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			public int getChildrenCount(int groupPosition) {
 				return usbDevice.getInterface(groupPosition).getEndpointCount();
 			}
-
 
 			@Override
 			public Object getChild(int groupPosition, int childPosition) {
@@ -157,9 +171,9 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 				((TextView) convertView.findViewById(R.id.tv_item_endpointmaxpacketsize)).setText(String.format("%02X", uei.getMaxPacketSize()));
 				((TextView) convertView.findViewById(R.id.tv_item_endpointtype)).setText(String.format("%02X", uei.getType()));
 				if (selInterfaceIndex == groupPosition && selEndpointIndex == childPosition) {
-					convertView.setBackgroundColor(0xffEEEEEE);
-				} else {
 					convertView.setBackgroundColor(Color.WHITE);
+				} else {
+					convertView.setBackgroundColor(0xffEEEEEE);
 				}
 				return convertView;
 			}
@@ -175,6 +189,9 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 				if (selInterfaceIndex != groupPosition || selEndpointIndex != childPosition) {
 					selInterfaceIndex = groupPosition;
 					selEndpointIndex = childPosition;
+					if (usbDeviceConnection.claimInterface(usbDevice.getInterface(groupPosition), true) == false) {
+						safeToast("claimInterface fail~~");
+					}
 					usbEndpointItem = new UsbEndpointItem(groupPosition, childPosition, usbDeviceConnection, usbDevice.getInterface(groupPosition).getEndpoint(childPosition));
 					expandableListAdapter.notifyDataSetChanged();
 				}
@@ -206,15 +223,54 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 		}
 	}
 
+	private byte[] hexToBytes(String hexStr) {
+		String[] hexs = hexStr.split(" ");
+		List<Byte> data = new ArrayList<Byte>();
+		for (String hex : hexs) {
+			try {
+				data.add(Byte.parseByte(hex, 16));
+			} catch (Exception e) {
+
+			}
+		}
+		byte[] rets = new byte[data.size()];
+		for (int i = 0; i < data.size(); ++i) {
+			rets[i] = data.get(i).byteValue();
+		}
+		return rets;
+	}
+
+	private String bytesToHex(byte[] dt) {
+		StringBuffer sb = new StringBuffer();
+		if (dt == null)
+			return "";
+		for (int i = 0; i < dt.length; ++i) {
+			sb.append(String.format("%02X ", dt[i]));
+		}
+		return sb.toString();
+	}
+
 	@Override
 	public void onClick(View view) {
 		if (usbEndpointItem == null)
 			return;
 		switch (view.getId()) {
 		case R.id.btn_send:
-			Log.i(TAG, "send:" + usbEndpointItem.send());
+			String hs = et_console.getText().toString();
+			getPreferences(MODE_PRIVATE).edit().putString("et", hs).commit();
+			byte[] dt = hexToBytes(hs);
+			String s = "send:" + usbEndpointItem.send(dt);
+			Log.i(TAG, s);
+			safeToast(s);
 			break;
-
+		case R.id.btn_recv:
+			byte[] dats = usbEndpointItem.recv();
+			String s2 = "recv:" + (dats == null ? -1 : dats.length);
+			Log.i(TAG, s2);
+			if (dats != null)
+				et_console.setText(bytesToHex(dats));
+			safeToast(s2);
+			break;
 		default:
 			break;
 		}
