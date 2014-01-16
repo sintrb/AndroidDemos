@@ -2,7 +2,9 @@ package com.sin.listusbdevice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -14,6 +16,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -36,6 +39,7 @@ public class MainActivity extends BaseActivity implements OnItemClickListener {
 			refreshDevices();
 		}
 	};
+	private Set<String> preDevices = new HashSet<String>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +52,19 @@ public class MainActivity extends BaseActivity implements OnItemClickListener {
 
 		"deviceclass", "deviceprotocol", "devicesubclass", "interfacecount" }, new int[] { R.id.tv_item_devicename, R.id.tv_item_deviceid, R.id.tv_item_vendorid, R.id.tv_item_productid,
 
-		R.id.tv_item_deviceclass, R.id.tv_item_deviceprotocol, R.id.tv_item_devicesubclass, R.id.tv_item_interfacecount });
+		R.id.tv_item_deviceclass, R.id.tv_item_deviceprotocol, R.id.tv_item_devicesubclass, R.id.tv_item_interfacecount }) {
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				View rv = super.getView(position, convertView, parent);
+				if (!preDevices.contains(devices.get(position).get("deviceid"))) {
+					rv.setBackgroundColor(0xFFFCE7E7);
+				} else {
+					rv.setBackgroundColor(0xffEEEEEE);
+				}
+				return rv;
+			}
+		};
 		lv_devices.setAdapter(adapter);
 		lv_devices.setOnItemClickListener(this);
 		IntentFilter filter = new IntentFilter();
@@ -77,7 +93,9 @@ public class MainActivity extends BaseActivity implements OnItemClickListener {
 		case R.id.action_refresh:
 			refreshDevices();
 			break;
-
+		case R.id.action_exit:
+			finish();
+			break;
 		default:
 			break;
 		}
@@ -86,6 +104,10 @@ public class MainActivity extends BaseActivity implements OnItemClickListener {
 
 	// 刷新设备列表
 	private void refreshDevices() {
+		preDevices.clear();
+		for (HashMap<String, Object> dev : devices) {
+			preDevices.add((String) dev.get("deviceid"));
+		}
 		asynCall(new Callable() {
 
 			@Override
