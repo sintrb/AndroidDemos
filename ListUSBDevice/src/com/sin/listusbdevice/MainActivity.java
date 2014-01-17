@@ -26,8 +26,8 @@ import com.sin.android.sinlibs.activities.BaseActivity;
 import com.sin.android.sinlibs.base.Callable;
 
 public class MainActivity extends BaseActivity implements OnItemClickListener {
-	public final String VERSION = "1.1";
-	public final int VERSION_INT = 11;
+	public final String VERSION = "1.2";
+	public final int VERSION_INT = 12;
 	private UsbManager usbManager;
 	private ListView lv_devices;
 	private ArrayList<HashMap<String, Object>> devices = new ArrayList<HashMap<String, Object>>();

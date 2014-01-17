@@ -5,7 +5,7 @@
     android:paddingLeft="@dimen/margin_normal" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/tv_log"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -17,7 +17,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
+        android:layout_below="@+id/tv_log"
         android:layout_alignParentLeft="true"
         android:text="@string/k_endpointaddress"
         android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -76,7 +76,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="18dp"
-        android:layout_toRightOf="@+id/textView1"
+        android:layout_toRightOf="@+id/tv_log"
         android:text="@string/emapty"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

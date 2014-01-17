@@ -7,6 +7,7 @@
         android:id="@+id/llpanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/boader_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/margin_small"
@@ -23,27 +24,50 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/send" />
+
+        <Button
+            android:id="@+id/btn_looprecv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/looprecv" />
     </LinearLayout>
 
     <EditText
         android:id="@+id/et_console"
         android:layout_width="wrap_content"
-        android:hint="@string/emapty"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/llpanel"
-        android:ems="10" >
+        android:ems="10"
+        android:hint="@string/emapty" >
 
         <requestFocus />
     </EditText>
+
+    <ScrollView
+        android:id="@+id/sv_log"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/log_height"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/et_console"
+        android:background="@drawable/boader_background" >
+
+        <TextView
+            android:id="@+id/tv_log"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/log_height"
+            android:text="@string/emapty"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </ScrollView>
 
     <ExpandableListView
         android:id="@+id/elv_interfaces"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/et_console" >
+        android:layout_below="@+id/sv_log" >
 
     </ExpandableListView>
 
