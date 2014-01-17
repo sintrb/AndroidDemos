@@ -33,5 +33,7 @@
     
     <string name="send">发送</string>
     <string name="recv">接收</string>
-    <string name="emapty">XX</string>
+    <string name="looprecv">一直接收</string>
+    <string name="stoprecv">停止接收</string>
+    <string name="emapty"></string>
 </resources>
