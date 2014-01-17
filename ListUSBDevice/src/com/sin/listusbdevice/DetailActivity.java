@@ -23,14 +23,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sin.android.sinlibs.activities.BaseActivity;
+import com.sin.android.sinlibs.base.Callable;
+import com.sin.android.sinlibs.utils.IntervalRunner;
 
 public class DetailActivity extends BaseActivity implements OnClickListener {
 	private static final String TAG = "DetailActivity";
@@ -89,11 +93,11 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 
 		findViewById(R.id.btn_send).setOnClickListener(this);
 		findViewById(R.id.btn_recv).setOnClickListener(this);
+		findViewById(R.id.btn_looprecv).setOnClickListener(this);
 
 		et_console = (EditText) findViewById(R.id.et_console);
 		et_console.setText(getPreferences(MODE_PRIVATE).getString("et", ""));
 		et_console.setOnLongClickListener(new View.OnLongClickListener() {
-
 			@Override
 			public boolean onLongClick(View arg0) {
 				et_console.setText(getPreferences(MODE_PRIVATE).getString("et", ""));
@@ -191,7 +195,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 					selInterfaceIndex = groupPosition;
 					selEndpointIndex = childPosition;
 					if (usbDeviceConnection.claimInterface(usbDevice.getInterface(groupPosition), true) == false) {
-						safeToast("claimInterface fail~~");
+						appendLog("claimInterface fail~~");
 					}
 					usbEndpointItem = new UsbEndpointItem(groupPosition, childPosition, usbDeviceConnection, usbDevice.getInterface(groupPosition).getEndpoint(childPosition));
 					expandableListAdapter.notifyDataSetChanged();
@@ -200,10 +204,54 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			}
 		});
 		elv_interfaces.setAdapter(expandableListAdapter);
+
+		tv_log = (TextView) findViewById(R.id.tv_log);
+		tv_log.setOnLongClickListener(new View.OnLongClickListener() {
+			
+			@Override
+			public boolean onLongClick(View v) {
+				tv_log.setText("");
+				logix = 0;
+				return false;
+			}
+		});
 	}
+
+	private TextView tv_log = null;
+
+	public void safeLog(String log) {
+		safeCall(new Callable() {
+			@Override
+			public void call(Object... args) {
+				appendLog((String) args[0]);
+			}
+		}, log);
+	}
+	
+	private int logix = 1;
+	public void appendLog(String log) {
+		tv_log.append(logix+" ");
+		++logix;
+		tv_log.append(log);
+		tv_log.append("\r\n");
+		scrollToBottom((ScrollView) tv_log.getParent());
+	}
+
+	private void scrollToBottom(final ScrollView sv) {
+		sv.post(new Runnable() {
+			@Override
+			public void run() {
+				sv.fullScroll(ScrollView.FOCUS_DOWN);
+			}
+		});
+	}
+
+	private IntervalRunner intervalRunner = null;
 
 	@Override
 	protected void onDestroy() {
+		if (usbDeviceConnection != null)
+			usbDeviceConnection.close();
 		this.unregisterReceiver(permissionReceiver);
 		super.onDestroy();
 	}
@@ -268,15 +316,33 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			byte[] dt = hexToBytes(hs);
 			String s = "send:" + usbEndpointItem.send(dt);
 			Log.i(TAG, s);
-			safeToast(s);
+			appendLog(s);
 			break;
 		case R.id.btn_recv:
 			byte[] dats = usbEndpointItem.recv();
-			String s2 = "recv:" + (dats == null ? -1 : dats.length);
-			Log.i(TAG, s2);
-			if (dats != null)
-				et_console.setText(bytesToHex(dats));
-			safeToast(s2);
+			if (dats != null) {
+				appendLog("recv(" + dats.length + "):" + bytesToHex(dats));
+			} else {
+				appendLog("recv failed");
+			}
+			break;
+		case R.id.btn_looprecv:
+			if (intervalRunner == null) {
+				intervalRunner = IntervalRunner.run(new Callable() {
+					@Override
+					public void call(Object... args) {
+						byte[] dats = usbEndpointItem.recv();
+						if (dats != null) {
+							safeLog("recv(" + dats.length + "):" + bytesToHex(dats));
+						}
+					}
+				}, 0);
+				((Button) view).setText(R.string.stoprecv);
+			} else {
+				intervalRunner.stop();
+				intervalRunner = null;
+				((Button) view).setText(R.string.looprecv);
+			}
 			break;
 		default:
 			break;
