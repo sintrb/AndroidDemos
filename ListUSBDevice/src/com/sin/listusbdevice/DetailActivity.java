@@ -274,7 +274,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private byte[] hexToBytes(String hexStr) {
-		String[] hexs = hexStr.split(" ");
+		String[] hexs = hexStr.replaceAll("[\\,,\r,\n,; ]", " ").replaceAll(" +", " ").split(" ");
 		List<Byte> data = new ArrayList<Byte>();
 		for (String hex : hexs) {
 			try {
@@ -312,10 +312,10 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			return;
 		switch (view.getId()) {
 		case R.id.btn_send:
-			String hs = et_console.getText().toString();
+			String hs = et_console.getText().toString()+" ";
 			getPreferences(MODE_PRIVATE).edit().putString("et", hs).commit();
 			byte[] dt = hexToBytes(hs);
-			String s = "send:" + usbEndpointItem.send(dt);
+			String s = "send:" + usbEndpointItem.send(dt) + "/" + dt.length;
 			Log.i(TAG, s);
 			appendLog(s);
 			break;
@@ -349,7 +349,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 				((Button) view).setText(R.string.stoprecv);
 			} else {
 				long ct = System.currentTimeMillis() - stttime;
-				safeLog(String.format("recv %d bytes, cost %d ms, speed %dKB/s", rcount, ct, rcount/ct));
+				safeLog(String.format("recv %d bytes, cost %d ms, speed %dKB/s", rcount, ct, rcount / ct));
 				intervalRunner.stop();
 				intervalRunner = null;
 				((Button) view).setText(R.string.looprecv);
