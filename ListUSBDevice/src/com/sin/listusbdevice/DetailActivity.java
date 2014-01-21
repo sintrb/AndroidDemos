@@ -207,7 +207,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 
 		tv_log = (TextView) findViewById(R.id.tv_log);
 		tv_log.setOnLongClickListener(new View.OnLongClickListener() {
-			
+
 			@Override
 			public boolean onLongClick(View v) {
 				tv_log.setText("");
@@ -227,10 +227,11 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			}
 		}, log);
 	}
-	
+
 	private int logix = 1;
+
 	public void appendLog(String log) {
-		tv_log.append(logix+" ");
+		tv_log.append(logix + " ");
 		++logix;
 		tv_log.append(log);
 		tv_log.append("\r\n");
@@ -328,17 +329,27 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.btn_looprecv:
 			if (intervalRunner == null) {
+				rcount = 0;
+				stttime = System.currentTimeMillis();
 				intervalRunner = IntervalRunner.run(new Callable() {
 					@Override
 					public void call(Object... args) {
-						byte[] dats = usbEndpointItem.recv();
-						if (dats != null) {
-							safeLog("recv(" + dats.length + "):" + bytesToHex(dats));
-						}
+						// byte[] dats = usbEndpointItem.recv();
+						// if (dats != null) {
+						// safeLog("recv(" + dats.length + "):" +
+						// bytesToHex(dats));
+						// }
+						int len = usbEndpointItem.recv_buf(rbuf, rbuf.length);
+						if (len > 0)
+							rcount += len;
+						else
+							safeLog("failed");
 					}
 				}, 0);
 				((Button) view).setText(R.string.stoprecv);
 			} else {
+				long ct = System.currentTimeMillis() - stttime;
+				safeLog(String.format("recv %d bytes, cost %d ms, speed %dKB/s", rcount, ct, rcount/ct));
 				intervalRunner.stop();
 				intervalRunner = null;
 				((Button) view).setText(R.string.looprecv);
@@ -348,4 +359,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			break;
 		}
 	}
+
+	byte[] rbuf = new byte[1024];
+	int rcount = 0;
+	long stttime = 0;
 }

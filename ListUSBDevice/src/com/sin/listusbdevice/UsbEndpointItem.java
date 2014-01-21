@@ -32,4 +32,8 @@ public class UsbEndpointItem {
 			return rt;
 		}
 	}
+	
+	public int recv_buf(byte[] buf, int len){
+		return usbDeviceConnection.bulkTransfer(usbEndpoint, buf, len, 1000);
+	}
 }
