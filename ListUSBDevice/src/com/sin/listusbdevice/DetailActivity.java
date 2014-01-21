@@ -94,6 +94,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 		findViewById(R.id.btn_send).setOnClickListener(this);
 		findViewById(R.id.btn_recv).setOnClickListener(this);
 		findViewById(R.id.btn_looprecv).setOnClickListener(this);
+		findViewById(R.id.btn_loopsend).setOnClickListener(this);
 
 		et_console = (EditText) findViewById(R.id.et_console);
 		et_console.setText(getPreferences(MODE_PRIVATE).getString("et", ""));
@@ -247,7 +248,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 		});
 	}
 
-	private IntervalRunner intervalRunner = null;
+	private IntervalRunner recvRunner = null;
+	private IntervalRunner sendRunner = null;
 
 	@Override
 	protected void onDestroy() {
@@ -312,7 +314,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			return;
 		switch (view.getId()) {
 		case R.id.btn_send:
-			String hs = et_console.getText().toString()+" ";
+			String hs = et_console.getText().toString() + " ";
 			getPreferences(MODE_PRIVATE).edit().putString("et", hs).commit();
 			byte[] dt = hexToBytes(hs);
 			String s = "send:" + usbEndpointItem.send(dt) + "/" + dt.length;
@@ -328,31 +330,54 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			}
 			break;
 		case R.id.btn_looprecv:
-			if (intervalRunner == null) {
+			if (recvRunner == null) {
 				rcount = 0;
-				stttime = System.currentTimeMillis();
-				intervalRunner = IntervalRunner.run(new Callable() {
+				final UsbEndpointItem ri = usbEndpointItem;
+				rsttime = System.currentTimeMillis();
+				recvRunner = IntervalRunner.run(new Callable() {
 					@Override
 					public void call(Object... args) {
-						// byte[] dats = usbEndpointItem.recv();
-						// if (dats != null) {
-						// safeLog("recv(" + dats.length + "):" +
-						// bytesToHex(dats));
-						// }
-						int len = usbEndpointItem.recv_buf(rbuf, rbuf.length);
+						int len = ri.recv_buf(rbuf, rbuf.length);
 						if (len > 0)
 							rcount += len;
 						else
-							safeLog("failed");
+							safeLog("recv failed");
 					}
 				}, 0);
 				((Button) view).setText(R.string.stoprecv);
 			} else {
-				long ct = System.currentTimeMillis() - stttime;
+				long ct = System.currentTimeMillis() - rsttime;
 				safeLog(String.format("recv %d bytes, cost %d ms, speed %dKB/s", rcount, ct, rcount / ct));
-				intervalRunner.stop();
-				intervalRunner = null;
+				recvRunner.stop();
+				recvRunner = null;
 				((Button) view).setText(R.string.looprecv);
+			}
+			break;
+		case R.id.btn_loopsend:
+			if (sendRunner == null) {
+				scount = 0;
+				for (int i = 0; i < sbuf.length; ++i) {
+					sbuf[i] = (byte) i;
+				}
+				final UsbEndpointItem si = usbEndpointItem;
+				ssttime = System.currentTimeMillis();
+				sendRunner = IntervalRunner.run(new Callable() {
+					@Override
+					public void call(Object... args) {
+						int len = si.send(sbuf);
+						if (len > 0)
+							scount += len;
+						else
+							safeLog("send failed");
+					}
+				}, 0);
+				((Button) view).setText(R.string.stopsend);
+			} else {
+				long ct = System.currentTimeMillis() - ssttime;
+				safeLog(String.format("send %d bytes, cost %d ms, speed %dKB/s", scount, ct, scount / ct));
+				sendRunner.stop();
+				sendRunner = null;
+				((Button) view).setText(R.string.loopsend);
 			}
 			break;
 		default:
@@ -362,5 +387,9 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 
 	byte[] rbuf = new byte[1024];
 	int rcount = 0;
-	long stttime = 0;
+	long rsttime = 0;
+
+	byte[] sbuf = new byte[64];
+	int scount = 0;
+	long ssttime = 0;
 }
