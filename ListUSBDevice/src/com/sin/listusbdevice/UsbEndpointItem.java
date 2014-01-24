@@ -3,6 +3,13 @@ package com.sin.listusbdevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbEndpoint;
 
+/**
+ * UsbEndpointItem 端点通信类，用于和USB端点通信
+ * 
+ * @author RobinTang
+ * 
+ *         2014-01-24
+ */
 public class UsbEndpointItem {
 	public int intefaceIndex;
 	public int endpointIndex;
@@ -22,6 +29,7 @@ public class UsbEndpointItem {
 	}
 
 	private byte[] rbuf = new byte[1024];
+
 	public byte[] recv() {
 		int l = usbDeviceConnection.bulkTransfer(usbEndpoint, rbuf, rbuf.length, 1000);
 		if (l < 0) {
@@ -32,8 +40,8 @@ public class UsbEndpointItem {
 			return rt;
 		}
 	}
-	
-	public int recv_buf(byte[] buf, int len){
+
+	public int recv_buf(byte[] buf, int len) {
 		return usbDeviceConnection.bulkTransfer(usbEndpoint, buf, len, 1000);
 	}
 }
