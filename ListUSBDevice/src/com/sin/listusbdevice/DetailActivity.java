@@ -179,7 +179,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 				((TextView) convertView.findViewById(R.id.tv_item_endpointnumber)).setText(String.format("%02X", uei.getEndpointNumber()));
 				((TextView) convertView.findViewById(R.id.tv_item_endpointaddress)).setText(String.format("%02X", uei.getAddress()));
 				((TextView) convertView.findViewById(R.id.tv_item_endpointattributes)).setText(String.format("%02X", uei.getAttributes()));
-				((TextView) convertView.findViewById(R.id.tv_item_endpointdirection)).setText(String.format("%02X", uei.getDirection()));
+				((TextView) convertView.findViewById(R.id.tv_item_endpointdirection)).setText(String.format("%s", uei.getDirection()==0x80?"IN":"OUT"));
 				((TextView) convertView.findViewById(R.id.tv_item_endpointinterval)).setText(String.format("%02X", uei.getInterval()));
 				((TextView) convertView.findViewById(R.id.tv_item_endpointmaxpacketsize)).setText(String.format("%02X", uei.getMaxPacketSize()));
 				((TextView) convertView.findViewById(R.id.tv_item_endpointtype)).setText(String.format("%02X", uei.getType()));
