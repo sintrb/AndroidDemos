@@ -36,6 +36,13 @@ import com.sin.android.sinlibs.activities.BaseActivity;
 import com.sin.android.sinlibs.base.Callable;
 import com.sin.android.sinlibs.utils.IntervalRunner;
 
+/**
+ * DetailActivity USB设备详细界面，列出设备接口和端点信息
+ * 
+ * @author RobinTang
+ * 
+ *         2014-01-24
+ */
 public class DetailActivity extends BaseActivity implements OnClickListener {
 	private static final String TAG = "DetailActivity";
 	private static final String ACTION_FOR_PERMISSION = DetailActivity.class.getName() + ".ACTION_FOR_PERMISSION";
