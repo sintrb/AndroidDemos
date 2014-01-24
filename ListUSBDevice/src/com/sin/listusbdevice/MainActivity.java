@@ -25,13 +25,24 @@ import android.widget.SimpleAdapter;
 import com.sin.android.sinlibs.activities.BaseActivity;
 import com.sin.android.sinlibs.base.Callable;
 
+/**
+ * MainActivity USB设备列表界面
+ * 
+ * @author RobinTang
+ * 
+ *         2014-01-24
+ */
 public class MainActivity extends BaseActivity implements OnItemClickListener {
+	// 版本信息
 	public final String VERSION = "1.2";
 	public final int VERSION_INT = 12;
+
 	private UsbManager usbManager;
 	private ListView lv_devices;
 	private ArrayList<HashMap<String, Object>> devices = new ArrayList<HashMap<String, Object>>();
 	private SimpleAdapter adapter = null;
+
+	// USB事件接收器
 	private final BroadcastReceiver receiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
