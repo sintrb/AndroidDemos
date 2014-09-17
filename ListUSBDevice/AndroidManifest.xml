@@ -9,7 +9,8 @@
         android:targetSdkVersion="17" />
 
     <uses-permission android:name="android.hardware.usb.host" />
-
+	<uses-permission android:name="android.hardware.usb.accessory"/>
+	
     <uses-feature
         android:name="android.hardware.usb.host"
         android:required="true" />
