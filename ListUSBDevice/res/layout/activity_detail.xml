@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/llpanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/boader_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/margin_small"
@@ -15,55 +15,68 @@
 
         <Button
             android:id="@+id/btn_recv"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/recv" />
 
         <Button
             android:id="@+id/btn_send"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/send" />
 
         <Button
             android:id="@+id/btn_looprecv"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/looprecv" />
-        
+
         <Button
             android:id="@+id/btn_loopsend"
+            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/loopsend" />
     </LinearLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/Blue" >
+
+    </View>
+
     <EditText
         android:id="@+id/et_console"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/llpanel"
         android:ems="10"
-        android:hint="@string/emapty" >
+        android:hint="@string/emapty"
+        android:padding="5dp" >
 
-        <requestFocus />
+        <requestFocus android:layout_width="wrap_content" />
     </EditText>
 
     <ScrollView
         android:id="@+id/sv_log"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/log_height"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/et_console"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@drawable/boader_background" >
 
         <TextView
             android:id="@+id/tv_log"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/log_height"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:text="@string/emapty"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </ScrollView>
@@ -72,9 +85,7 @@
         android:id="@+id/elv_interfaces"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/sv_log" >
-
+        android:layout_weight="1" >
     </ExpandableListView>
 
-</RelativeLayout>
+</LinearLayout>
