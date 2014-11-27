@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="8dp" >
+
+    <com.sin.demo.ArrowView
+        android:id="@+id/arrowView1"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:tag="right" />
+
+    <com.sin.demo.ArrowView
+        android:id="@+id/arrowView2"
+        android:layout_width="77dp"
+        android:layout_height="29dp"
+        android:layout_weight="1.23"
+        android:tag="up" />
+
+    <com.sin.demo.ArrowView
+        android:id="@+id/ArrowView02"
+        android:layout_width="233dp"
+        android:layout_height="29dp"
+        android:layout_weight="0.04"
+        android:tag="left" />
+
+    <com.sin.demo.ArrowView
+        android:id="@+id/ArrowView01"
+        android:layout_width="54dp"
+        android:layout_height="29dp"
+        android:layout_weight="0.79"
+        android:tag="down" />
+
+</LinearLayout>
