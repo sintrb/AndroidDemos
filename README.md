@@ -1,4 +1,4 @@
 AndroidDemos
 ============
 
-Same Android Demos From Sin.
+Some Android Demos From Sin.
